@@ -1,7 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import { FaMapMarkerAlt, FaRegClock, FaStar, FaStethoscope } from "react-icons/fa";
+import {
+  FaMapMarkerAlt,
+  FaRegClock,
+  FaStar,
+  FaStethoscope,
+} from "react-icons/fa";
 
 const Doctors = () => {
   const { speciality } = useParams();
@@ -10,7 +15,7 @@ const Doctors = () => {
   const { doctors } = useContext(AppContext);
 
   // Get unique specialties from existing doctors data
-  const uniqueSpecialities = [...new Set(doctors.map(doc => doc.speciality))];
+  const uniqueSpecialities = [...new Set(doctors.map((doc) => doc.speciality))];
 
   const applyFilter = () => {
     if (speciality) {
@@ -55,7 +60,7 @@ const Doctors = () => {
           >
             All Specialties
           </button>
-          
+
           {uniqueSpecialities.map((spec) => (
             <button
               key={spec}
@@ -77,22 +82,28 @@ const Doctors = () => {
         <p className="text-gray-600 font-medium">
           {speciality ? (
             <>
-              <span className="text-[#5f6FFF]">{filterDoc.length}</span> {filterDoc.length === 1 ? 'specialist' : 'specialists'} in <span className="text-[#5f6FFF]">{speciality}</span>
+              <span className="text-[#5f6FFF]">{filterDoc.length}</span>{" "}
+              {filterDoc.length === 1 ? "specialist" : "specialists"} in{" "}
+              <span className="text-[#5f6FFF]">{speciality}</span>
             </>
           ) : (
             <>
-              <span className="text-[#5f6FFF]">{filterDoc.length}</span> {filterDoc.length === 1 ? 'doctor' : 'doctors'} available
+              <span className="text-[#5f6FFF]">{filterDoc.length}</span>{" "}
+              {filterDoc.length === 1 ? "doctor" : "doctors"} available
             </>
           )}
         </p>
       </div>
 
       {/* Doctors Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {filterDoc.map((doctor, index) => (
           <div
             key={index}
-            onClick={() => navigate(`/appointment/${doctor._id}`)}
+            onClick={() => {
+              navigate(`/appointment/${doctor._id}`);
+              scrollTo(0, 0);
+            }}
             className="group flex flex-col h-full bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border border-gray-100 hover:border-[#5f6FFF]/50"
           >
             {/* Doctor Image */}
@@ -117,7 +128,7 @@ const Doctors = () => {
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#5f6FFF] transition-colors">
-                    Dr. {doctor.name}
+                    {doctor.name}
                   </h3>
                   <p className="text-sm text-gray-600">{doctor.speciality}</p>
                 </div>
@@ -136,11 +147,15 @@ const Doctors = () => {
                 <div className="flex flex-col gap-3 mt-4">
                   <div className="flex items-center text-gray-600">
                     <FaMapMarkerAlt className="text-[#5f6FFF] mr-2" />
-                    <span className="text-sm">{doctor.location || "City Hospital"}</span>
+                    <span className="text-sm">
+                      {doctor.location || "City Hospital"}
+                    </span>
                   </div>
                   <div className="flex items-center text-gray-600">
                     <FaRegClock className="text-[#5f6FFF] mr-2" />
-                    <span className="text-sm">{doctor.experience || "10+"} years experience</span>
+                    <span className="text-sm">
+                      {doctor.experience || "10+"} years experience
+                    </span>
                   </div>
                 </div>
 
@@ -170,7 +185,9 @@ const Doctors = () => {
             No doctors found
           </h3>
           <p className="text-gray-500 mb-4">
-            {speciality ? `We currently don't have ${speciality} specialists` : "We currently don't have available doctors"}
+            {speciality
+              ? `We currently don't have ${speciality} specialists`
+              : "We currently don't have available doctors"}
           </p>
           <button
             onClick={() => navigate("/doctors")}

@@ -1,16 +1,22 @@
-import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  FaStar,
-  FaRegClock,
-  FaMapMarkerAlt,
-  FaStethoscope,
-} from "react-icons/fa";
+import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
+import { FaMapMarkerAlt, FaRegClock, FaStar } from "react-icons/fa";
 
-const TopDoctors = () => {
-  const navigate = useNavigate();
+const RelatedDoctors = ({ speciality, docId }) => {
   const { doctors } = useContext(AppContext);
+  const navigate = useNavigate();
+
+  const [relDocs, setRelDocs] = useState([]);
+
+  useEffect(() => {
+    if (doctors.length > 0 && speciality) {
+      const doctorsData = doctors.filter(
+        (doc) => doc.speciality === speciality && doc._id !== docId
+      );
+      setRelDocs(doctorsData);
+    }
+  }, [doctors, speciality, docId]);
 
   return (
     <div className="py-16 px-4 sm:px-8 bg-white">
@@ -18,16 +24,13 @@ const TopDoctors = () => {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Meet Our <span className="text-[#5f6FFF]">Top Medical</span> Experts
+            <span className="text-[#5f6FFF]">Related</span> Doctors
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Highly qualified specialists dedicated to your health and wellness
-          </p>
         </div>
 
         {/* Doctors Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {doctors.slice(0, 8).map((doctor, index) => (
+          {relDocs.slice(0, 5).map((doctor, index) => (
             <div
               key={index}
               onClick={() => {
@@ -154,4 +157,4 @@ const TopDoctors = () => {
   );
 };
 
-export default TopDoctors;
+export default RelatedDoctors;
